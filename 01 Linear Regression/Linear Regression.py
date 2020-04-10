@@ -1,13 +1,12 @@
 import numpy as np
 import matplotlib.pylab as plt
-import math
 
-def linear_function(x_range, a, b):
-    ret = []
-    for i in range(len(x_range)):
-        y = a*x_range[i] + b
-        ret.append(y)
-    return ret
+def linear_function(x_s, a, b):
+    y_s = []
+    for i in range(len(x_s)):
+        y = a*x_s[i] + b
+        y_s.append(y)
+    return y_s
 
 def random_generation(x_range, a, b):
     ret = []
