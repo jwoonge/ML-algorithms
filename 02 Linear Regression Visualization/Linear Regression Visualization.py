@@ -53,8 +53,6 @@ def convergence(theta0, theta1, t, convergence_rate = 0.000001):
 
 x_data, y_data = read_csv('data.csv')
 
-a=3
-b=-2
 t=0
 theta0=[-30]
 theta1=[-30]
@@ -86,7 +84,7 @@ theta0_range, theta1_range = np.meshgrid(theta0_range, theta1_range)
 J = object_function(theta0_range, theta1_range, x_data, y_data)
 
 fig = plt.figure()
-plt.title("3_energy surface")
+plt.title("3_energy_surface")
 ax = fig.gca(projection='3d')
 ax.plot_surface(theta0_range, theta1_range, J, alpha=0.7, cmap=cm.jet)
 ax.set_xlabel('theta_0')
@@ -94,3 +92,20 @@ ax.set_ylabel('theta_1')
 ax.set_zlabel('energy')
 ax.view_init(45,45)
 plt.show()
+
+
+fig = plt.figure()
+plt.title("4_gradient_descent_path")
+ax = fig.gca(projection='3d')
+ax.plot_surface(theta0_range, theta1_range, J, alpha=0.7, cmap=cm.jet)
+ax.set_xlabel('theta_0')
+ax.set_ylabel('theta_1')
+ax.set_zlabel('energy')
+
+theta0 = theta0[0:min_t+1]
+theta1 = theta1[0:min_t+1]
+energy = energy[0:min_t+1]
+ax.plot(theta0, theta1, energy, c='k', zorder=5)
+ax.view_init(45,45)
+plt.show()
+print(theta0[-1], theta1[-1])
