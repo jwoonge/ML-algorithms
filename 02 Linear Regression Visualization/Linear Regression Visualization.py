@@ -52,3 +52,20 @@ def convergence(theta0, theta1, t, convergence_rate = 0.000001):
 
 
 x_data, y_data = read_csv('data.csv')
+
+a=3
+b=-2
+t=0
+theta0=[-30]
+theta1=[-30]
+energy = []
+energy.append(object_function(theta0[t],theta1[t],x_data, y_data))
+while True:
+    theta0_new, theta1_new = gradient_descent(theta0[t], theta1[t], x_data, y_data)
+    theta0.append(theta0_new)
+    theta1.append(theta1_new)
+    t += 1
+    energy.append(object_function(theta0[t],theta1[t],x_data,y_data))
+    if convergence(theta0, theta1,t):
+        break
+min_t = energy.index(min(energy))
