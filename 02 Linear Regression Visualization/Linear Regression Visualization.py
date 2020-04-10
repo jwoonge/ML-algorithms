@@ -69,3 +69,13 @@ while True:
     if convergence(theta0, theta1,t):
         break
 min_t = energy.index(min(energy))
+
+plt.title("1_input_points")
+plt.plot(x_data, y_data, 'k.')
+plt.show()
+
+x_range = [min(x_data), max(x_data)]
+plt.title("2_linear_regression_result")
+plt.plot(x_data, y_data, 'k.')
+plt.plot(x_range, linear_function(x_range, theta1[min_t], theta0[min_t]), 'r')
+plt.show()
