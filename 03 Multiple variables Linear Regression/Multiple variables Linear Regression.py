@@ -26,5 +26,18 @@ def object_function(thetas, datas):
     ret /= 2*(len(datas))
     return ret
 
+def gradient_descent(thetas, datas, learning_rate=0.000022):
+    thetas_new = []
+    for i in range(len(thetas)):
+        update = 0
+        for j in range(len(datas)):
+            if i == 0:
+                mult = 1
+            else:
+                mult = datas[j][i-1]
+            update += (linear_model(thetas,datas[j][0:3]) - datas[j][-1])/ len(datas) * mult
+        thetas_new.append(thetas[i] - learning_rate*update)
+    return thetas_new
+
 data_train = read_csv('data_train.csv')
 data_test = read_csv('data_test.csv')
