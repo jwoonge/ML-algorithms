@@ -74,4 +74,19 @@ while True:
         break
     if t>300:
         break
-    #105.59 4.44
+
+plt.title("1_parameters (training)")
+thetas = np.transpose(thetas)
+plt.plot(thetas[0], c='k')
+plt.plot(thetas[1], c='r')
+plt.plot(thetas[2], c='g')
+plt.plot(thetas[3], c='b')
+plt.show()
+
+plt.title("2_training error")
+plt.plot(error_train, c='b')
+plt.show()
+
+plt.title("3_ testing error")
+plt.plot(error_test, c='r')
+plt.show()
