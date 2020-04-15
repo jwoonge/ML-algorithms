@@ -13,5 +13,18 @@ def read_csv(path):
         ret.append(temp)
     return ret
 
+def linear_model(thetas, variables):
+    ret = thetas[0]
+    for i in range(len(thetas)-1):
+        ret += thetas[i+1] * variables[i]
+    return ret
+
+def object_function(thetas, datas):
+    ret = 0
+    for i in range(len(datas)):
+        ret += (linear_model(thetas,datas[i][0:3]) - datas[i][-1])**2
+    ret /= 2*(len(datas))
+    return ret
+
 data_train = read_csv('data_train.csv')
 data_test = read_csv('data_test.csv')
