@@ -39,10 +39,10 @@ def gradient_descent(thetas, datas, learning_rate=0.000022):
         thetas_new.append(thetas[i] - learning_rate*update)
     return thetas_new
 
-def convergence(thetas_last, thetas_new, convergence_rate = 0.001):
+def convergence(thetas_last, thetas_new, convergence_rate = 0.00001):
     count = 0
     for i in range(len(thetas_last)):
-        if not thetas_last[i]!=0:
+        if not thetas_last[i]==0:
             if np.abs((thetas_new[i] - thetas_last[i])/thetas_last[i]) <= convergence_rate:
                 count += 1
         else:
@@ -58,21 +58,18 @@ data_train = read_csv('data_train.csv')
 data_test = read_csv('data_test.csv')
 
 t=0
-thetas = [[-3.08,10,10,10]]
-thetas = [[1,1,1,1]]
+thetas = [[0,0,0,0]]
 error_train = [object_function(thetas[t],data_train)]
 error_test = [object_function(thetas[t], data_test)]
 
 while True:
-    thetas_new = gradient_descent(thetas[t], data_train, 0.000022)
+    thetas_new = gradient_descent(thetas[t], data_train, 0.00001)
     thetas.append(thetas_new)
     t += 1
     error_train.append(object_function(thetas[t], data_train))
     error_test.append(object_function(thetas[t], data_test))
     print(thetas_new, error_train[-1], error_test[-1])
     if convergence(thetas[t-1],thetas[t]):
-        break
-    if t>300:
         break
 
 plt.title("1_parameters (training)")
