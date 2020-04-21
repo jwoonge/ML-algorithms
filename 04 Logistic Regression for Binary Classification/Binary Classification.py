@@ -42,8 +42,33 @@ def gradient_descent(thetas, variables, labels, learning_rate):
         thetas_new.append(thetas[i]-learning_rate*update)
     return thetas_new
 
-variables, labels = read_data('data.txt')
+def convergence(thetas_last, thetas_new, convergence_rate = 0.00000001):
+    count = 0
+    for i in range(len(thetas_last)):
+        rate = np.abs((thetas_new[i]+math.e**(-64) - thetas_last[i])/(thetas_last[i]+math.e**(-64)))
+        print(rate)
+        if rate <= convergence_rate:
+            count += 1
+    if count == len(thetas_last):
+        return True
+    else:
+        return False
 
+variables, labels = read_data('data.txt')
+t=0
+thetas = [[-27,0,0]]
+error_train = [object_func(thetas[t],variables,labels)]
+
+while True:
+    thetas_new = gradient_descent(thetas[t], variables, labels, 0.003)
+    thetas.append(thetas_new)
+    t+= 1
+    error_train.append(object_func(thetas[t], variables, labels))
+    print(thetas_new, error_train[-1])
+    if convergence(thetas[t-1], thetas[t]):
+        print(convergence(thetas[t-1], thetas[t]))
+        break
+min_t = error_train.index(min(error_train))
 
 plt.title("01_training_data")
 x_label0 = []
@@ -51,7 +76,7 @@ y_label0 = []
 x_label1 = []
 y_label1 = []
 for i in range(len(variables)):
-    if labels[i]==0:
+    if labels[i]==1:
         x_label0.append(variables[i][0])
         y_label0.append(variables[i][1])
     else:
@@ -59,4 +84,15 @@ for i in range(len(variables)):
         y_label1.append(variables[i][1])
 plt.scatter(x_label0, y_label0,alpha=0.5, c='b')
 plt.scatter(x_label1, y_label1,alpha=0.5, c='r')
+plt.show()
+
+plt.title("02_estimated_parameters")
+thetas = np.transpose(thetas)
+plt.plot(thetas[0], c='r')
+plt.plot(thetas[1], c='g')
+plt.plot(thetas[2], c='b')
+plt.show()
+
+plt.title("03_training_error")
+plt.plot(error_train, c='b')
 plt.show()
