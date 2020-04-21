@@ -11,6 +11,37 @@ def read_data(filename):
 
     return variables,labels
 
+def sigmoid(z):
+    return 1/(1+np.exp(-z))
+
+def linear_func(thetas, variables):
+    ret = thetas[0]
+    for i in range(len(thetas)-1):
+        ret += thetas[i+1] * variables[i]
+    return ret
+
+def object_func(thetas, variables, labels):
+    m = len(variables)
+    ret = 0
+    for i in range(m):
+        ret += -labels[i] * np.log(sigmoid(linear_func(thetas,variables[i]))) /m
+        ret += -(1-labels[i])*np.log(1-sigmoid(linear_func(thetas,variables[i]))+math.e**(-64)) /m
+    return ret
+
+def gradient_descent(thetas, variables, labels, learning_rate):
+    thetas_new = []
+    m = len(variables)
+    for i in range(len(thetas)):
+        update = 0
+        for j in range(m):
+            if i==0:
+                mult=1
+            else:
+                mult = variables[j][i-1]
+            update += (sigmoid(linear_func(thetas,variables[j]))-labels[j])*mult/m
+        thetas_new.append(thetas[i]-learning_rate*update)
+    return thetas_new
+
 variables, labels = read_data('data.txt')
 
 
