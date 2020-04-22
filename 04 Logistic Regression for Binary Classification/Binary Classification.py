@@ -68,7 +68,10 @@ while True:
     if convergence(thetas[t-1], thetas[t]):
         print(convergence(thetas[t-1], thetas[t]))
         break
+    if t>300:
+        break
 min_t = error_train.index(min(error_train))
+opt_thetas = thetas[min_t]
 
 plt.title("01_training_data")
 x_label0 = []
@@ -76,7 +79,7 @@ y_label0 = []
 x_label1 = []
 y_label1 = []
 for i in range(len(variables)):
-    if labels[i]==1:
+    if labels[i]==0:
         x_label0.append(variables[i][0])
         y_label0.append(variables[i][1])
     else:
@@ -95,4 +98,14 @@ plt.show()
 
 plt.title("03_training_error")
 plt.plot(error_train, c='b')
+plt.show()
+
+plt.title("04_classifier")
+x_range = np.arange(30,100,0.5)
+y_range = np.arange(30,100,0.5)
+x_range,y_range = np.meshgrid(x_range,y_range)
+classified = sigmoid(linear_func(opt_thetas,[x_range,y_range]))
+plt.contourf(x_range,y_range,classified, 300, cmap='RdBu_r',zorder=1)
+plt.scatter(x_label0, y_label0,alpha=1, c='b',zorder=2)
+plt.scatter(x_label1, y_label1,alpha=1, c='r',zorder=2)
 plt.show()
