@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import math
 
 global x_d 
-x_d = [0,0,1,0,2,0,1]
+x_d = [0,0,1,0,2,0,1,3,2]
 global y_d 
-y_d = [0,0,0,1,0,2,1]
+y_d = [0,0,0,1,0,2,1,2,3]
 
 def read_data(filename):
     data = np.genfromtxt(filename, delimiter=',')
@@ -37,7 +37,7 @@ def gradient_descent(thetas, x_s, y_s, labels, learning_rate):
     m = len(labels)
     for i in range(len(thetas)):
         update = 0
-        for j in range(m): # 이거 ij 순서 바꾸면?
+        for j in range(m):
             mult = x_s[j]**x_d[i] * y_s[j]**y_d[i]
             update += (sigmoid(func(thetas,x_s[j],y_s[j]))-labels[j])*mult/m
         thetas_new.append(thetas[i]-learning_rate*update)
@@ -50,6 +50,12 @@ def accuracy(thetas, x_s, y_s, l_s):
         if abs(classified-l_s[i]) < 0.5:
             correct += 1
     return correct/len(l_s)*100
+
+def print_test(t, thetas, error_train, acc_train, max_acc_train):
+    print(t, end=', ')
+    for i in range(len(thetas)):
+        print(round(thetas[i],10), end=', ')
+    print(round(error_train,6), round(acc_train,2), round(max_acc_train,2), end="\n")
 
 x_s, y_s, l_s = read_data('data-nonlinear.txt')
 x_0 = x_s[l_s==0]
@@ -68,10 +74,12 @@ while True:
     t += 1
     error_train.append(object_func(thetas[t], x_s, y_s, l_s))
     accuracy_train.append(accuracy(thetas[t],x_s,y_s,l_s))
+    
     ################
-    if accuracy_train[-1] > accuracy_train[best]:
+    if accuracy_train[-1] >= accuracy_train[best]:
         best = t
-    if t>30000:
+    print_test(t,thetas[t],error_train[-1],accuracy_train[-1],accuracy_train[best])
+    if t>2000:
         break
 
 best_thetas = thetas[best]
@@ -83,16 +91,31 @@ plt.scatter(x_1, y_1, c='r')
 plt.tight_layout()
 plt.gca().set_aspect('equal', adjustable='box')
 plt.show()
+
 ###### result 02 ######
 
 ###### result 03 ######
 plt.title('03 training error')
 plt.plot(error_train, c='b')
 plt.show()
+
 ###### result 04 ######
 plt.title('04 training accuracy')
 plt.plot(accuracy_train, c='r')
 plt.show()
+
 ###### result 05 ######
 print('final accuracy : ',accuracy_train[-1])
 print('best  accuracy : ',accuracy_train[best])
+
+###### result 05 ######
+plt.title('06 classifier')
+x_range = np.arange(-1,1,0.005)
+y_range = np.arange(-1,1,0.005)
+x_range, y_range = np.meshgrid(x_range, y_range)
+classified = sigmoid(func(thetas[best],x_range,y_range))
+plt.contour(x_range,y_range,classified,levels=[0,0.5,1])
+plt.colorbar()
+plt.scatter(x_0, y_0, c='b')
+plt.scatter(x_1, y_1, c='r')
+plt.show()
