@@ -24,6 +24,14 @@ def func(thetas, x, y):
         ret += thetas[i]*x**x_d[i]*y**y_d[i]
     return ret
 
+def object_func(thetas, x_s,y_s, labels):
+    m = len(labels)
+    ret = 0
+    for i in range(m):
+        ret += -labels[i] * math.log(sigmoid(func(thetas,x_s[i],y_s[i]))+np.exp(-64)) /m
+        ret += -(1-labels[i])*math.log(1-(sigmoid(func(thetas,x_s[i],y_s[i])))+np.exp(-64)) /m
+    return ret
+
 def gradient_descent(thetas, x_s, y_s, labels, learning_rate):
     thetas_new = []
     m = len(labels)
@@ -35,15 +43,32 @@ def gradient_descent(thetas, x_s, y_s, labels, learning_rate):
         thetas_new.append(thetas[i]-learning_rate*update)
     return thetas_new
 
-x_s, y_s, l_s = read_data('data-nonlinear.txt')
-x_0 = x_s[l_s==0]
-x_1 = x_s[l_s==1]
-y_0 = y_s[l_s==0]
-y_1 = y_s[l_s==1]
+def accuracy(thetas, x_s, y_s, l_s):
+    correct = 0
+    for i in range(len(l_s)):
+        classified = sigmoid(func(thetas, x_s[i],y_s[i]))
+        if abs(classified-l_s[i]) < 0.5:
+            correct += 1
+    return correct/len(l_s)*100
 
-plt.title('01')
-plt.scatter(x_0, y_0, c='b')
-plt.scatter(x_1, y_1, c='r')
-plt.tight_layout()
-plt.gca().set_aspect('equal', adjustable='box')
-plt.show()
+x_s, y_s, l_s = read_data('data-nonlinear.txt')
+
+t=0
+thetas = [[1 for x in range(len(x_d))]]
+error_train = [object_func(thetas[t], x_s, y_s, l_s)]
+accuracy_train = [accuracy(thetas[t], x_s,y_s,l_s)]
+best = 0
+while True:
+    thetas_new = gradient_descent(thetas[t], x_s, y_s, l_s, 3)
+    thetas.append(thetas_new)
+    t += 1
+    error_train.append(object_func(thetas[t], x_s, y_s, l_s))
+    accuracy_train.append(accuracy(thetas[t],x_s,y_s,l_s))
+    ################
+    if accuracy_train[-1] > accuracy_train[best]:
+        best = t
+    if t>30000:
+        break
+
+best_acc = accuracy_train[best]
+best_thetas = thetas[best]
