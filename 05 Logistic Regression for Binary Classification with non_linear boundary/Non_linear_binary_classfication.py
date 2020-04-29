@@ -52,6 +52,10 @@ def accuracy(thetas, x_s, y_s, l_s):
     return correct/len(l_s)*100
 
 x_s, y_s, l_s = read_data('data-nonlinear.txt')
+x_0 = x_s[l_s==0]
+x_1 = x_s[l_s==1]
+y_0 = y_s[l_s==0]
+y_1 = y_s[l_s==1]
 
 t=0
 thetas = [[1 for x in range(len(x_d))]]
@@ -70,5 +74,25 @@ while True:
     if t>30000:
         break
 
-best_acc = accuracy_train[best]
 best_thetas = thetas[best]
+
+###### result 01 ######
+plt.title('01 training data')
+plt.scatter(x_0, y_0, c='b')
+plt.scatter(x_1, y_1, c='r')
+plt.tight_layout()
+plt.gca().set_aspect('equal', adjustable='box')
+plt.show()
+###### result 02 ######
+
+###### result 03 ######
+plt.title('03 training error')
+plt.plot(error_train, c='b')
+plt.show()
+###### result 04 ######
+plt.title('04 training accuracy')
+plt.plot(accuracy_train, c='r')
+plt.show()
+###### result 05 ######
+print('final accuracy : ',accuracy_train[-1])
+print('best  accuracy : ',accuracy_train[best])
