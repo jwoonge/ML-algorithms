@@ -79,7 +79,7 @@ while True:
     if accuracy_train[-1] >= accuracy_train[best]:
         best = t
     print_test(t,thetas[t],error_train[-1],accuracy_train[-1],accuracy_train[best])
-    if t>2000:
+    if t>5000:
         break
 
 best_thetas = thetas[best]
