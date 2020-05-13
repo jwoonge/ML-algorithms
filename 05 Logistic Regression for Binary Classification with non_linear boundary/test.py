@@ -92,6 +92,58 @@ x_range = np.arange(-1,1,0.005)
 y_range = np.arange(-1,1,0.005)
 x_range, y_range = np.meshgrid(x_range, y_range)
 
+dims = [[0,0],[1,0],[0,1],[2,0],[1,1],[0,2],[3,2],[2,3],[2,5],[5,2],[7,0],[0,7]]
+for i in range(100000):
+    start_thetas = []
+    for j in range(len(dims)):
+        rd = random.randint(-200,200)
+        start_thetas.append(rd)
+    
+    t=0
+    thetas = [start_thetas]
+
+    error_train = [object_func(thetas[t],dims, x_s, y_s, l_s)]
+    accuracy_train = [accuracy(thetas[t],dims, x_s,y_s,l_s)]
+    best = 0
+    epoch=1000
+    while True:
+        thetas_new = gradient_descent(thetas[t],dims, x_s, y_s, l_s, 5)
+        thetas.append(thetas_new)
+        t += 1
+        error_train.append(object_func(thetas[t],dims, x_s, y_s, l_s))
+        accuracy_train.append(accuracy(thetas[t],dims,x_s,y_s,l_s))
+        ################
+        if accuracy_train[-1] > accuracy_train[best]:
+            best = t
+        if epoch>100000:
+            break
+        if t>epoch:
+            if accuracy_train[best]>86.4 and abs(best-t)<20000:
+                print("추가",thetas[t],accuracy_train[t])
+                print('\t',start_thetas,'출발')
+                epoch+=1000
+            else:
+                break
+        
+        ###############
+    best_acc = max(accuracy_train)
+    print(best_acc)
+    title = "["
+    for j in range(len(start_thetas)):
+        title += str(start_thetas[j])
+        title += ' '
+    title += '] '
+    title += str(round(best_acc,2))
+    if best_acc > 86.5: 
+        plt.figure()
+        plt.title(title)
+        classified = sigmoid(func(thetas[best],dims,x_range,y_range))
+        plt.contour(x_range,y_range,classified,levels=[0,0.5,1])
+        plt.scatter(x_0, y_0, c='b')
+        plt.scatter(x_1, y_1, c='r')
+        plt.savefig('result/'+str(i)+'.png')
+        #f.write(str(i)+str(dims)+'\n')
+'''
 for i in range(10000):
     dim_num = random.randint(3,11)
     dims = [[0,0]]
@@ -144,3 +196,4 @@ for i in range(10000):
         plt.scatter(x_1, y_1, c='r')
         plt.savefig('result/'+str(i)+'.png')
         #f.write(str(i)+str(dims)+'\n')
+'''

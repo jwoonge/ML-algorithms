@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-
+dims = [[0,0],[1,0],[0,1],[2,0],[1,1],[0,2],[3,2],[2,3],[2,5],[5,2],[7,0],[0,7]]
 global x_d 
-x_d = [0,0,1,0,2,0,1,3,2]
+x_d = [0,1,0,2,1,0,3,2,2,5,7,2]
 global y_d 
-y_d = [0,0,0,1,0,2,1,2,3]
+y_d = [0,0,1,0,1,2,2,3,5,2,2,7]
 
 def read_data(filename):
     data = np.genfromtxt(filename, delimiter=',')
@@ -64,12 +64,12 @@ y_0 = y_s[l_s==0]
 y_1 = y_s[l_s==1]
 
 t=0
-thetas = [[1 for x in range(len(x_d))]]
+thetas = [[-100 for x in range(len(x_d))]]
 error_train = [object_func(thetas[t], x_s, y_s, l_s)]
 accuracy_train = [accuracy(thetas[t], x_s,y_s,l_s)]
 best = 0
 while True:
-    thetas_new = gradient_descent(thetas[t], x_s, y_s, l_s, 3)
+    thetas_new = gradient_descent(thetas[t], x_s, y_s, l_s, 10)
     thetas.append(thetas_new)
     t += 1
     error_train.append(object_func(thetas[t], x_s, y_s, l_s))
@@ -79,7 +79,7 @@ while True:
     if accuracy_train[-1] >= accuracy_train[best]:
         best = t
     print_test(t,thetas[t],error_train[-1],accuracy_train[-1],accuracy_train[best])
-    if t>5000:
+    if t>50000:
         break
 
 best_thetas = thetas[best]
