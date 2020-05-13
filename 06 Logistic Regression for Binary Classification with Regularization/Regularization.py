@@ -105,3 +105,34 @@ while True:
     
 
 
+###### result 01 ######
+plt.title('01 training data')
+x_0 = x_s[l_s==0]
+x_1 = x_s[l_s==1]
+y_0 = y_s[l_s==0]
+y_1 = y_s[l_s==1]
+plt.scatter(x_0, y_0, c='b')
+plt.scatter(x_1, y_1, c='r')
+plt.tight_layout()
+plt.gca().set_aspect('equal', adjustable='box')
+plt.show()
+
+###### result 02 ######
+plt.title('02 training error')
+plt.plot(err_overfit, c='r')
+plt.plot(err_justright, c='g')
+plt.plot(err_underfit, c='b')
+plt.show()
+
+###### result 03 ######
+
+###### result 04 ######
+plt.title('03 training accuracy')
+plt.plot(acc_overfit, c='r')
+plt.plot(acc_justright, c='g')
+plt.plot(acc_underfit, c='b')
+plt.show()
+
+###### result 05 ######
+
+###### result 06 ######
