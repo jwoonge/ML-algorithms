@@ -39,7 +39,7 @@ def gradient_descent(thetas, lam):
             data_fidelity[i] += z*mult
     data_fidelity = data_fidelity/m
     
-    regulr = lam*thetas
+    regular = lam*thetas
 
     return thetas - learning_rate * (data_fidelity + regular)
 
@@ -68,9 +68,9 @@ for i in range(10):
         dims.append([i,j])
 dims = np.array(dims)
 lambda_overfit = 0
-lambda_justright = 0.2
-lambda_underfit = 3
-learning_rate = 0.3
+lambda_justright = 30
+lambda_underfit = 300
+learning_rate = 0.1
 
 t = 0
 thetas_overfit = [np.zeros(100)]
@@ -98,15 +98,12 @@ while True:
 
     t+= 1
 
-    if t > 1000:
+    if t > 50:
         break
     
-for i in range(10):
-    print(err_overfit[i], err_justright[i], err_underfit[i])
-    print(acc_overfit[i], acc_justright[i], acc_underfit[i])
-    print("--------------------------------------------------")
+print(thetas_overfit[-1], thetas_justright[-1], thetas_underfit[-1])
 
-
+'''
 ###### result 01 ######
 
 #plt.title('01 training data')
@@ -159,3 +156,4 @@ plt.contour(x_range,y_range,classified_u,levels=[0,0.5,1], colors='b')
 plt.scatter(x_0, y_0, c='b')
 plt.scatter(x_1, y_1, c='r')
 plt.show()
+'''
