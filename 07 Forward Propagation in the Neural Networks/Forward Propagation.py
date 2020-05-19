@@ -47,3 +47,18 @@ for i in range(len(labels)):
 avg = []
 for i in range(10):
     avg.append(np.average(z[labels==i]))
+
+###### result 01 ######
+for i in range(10):
+    plt.subplot(2,5,i+1)
+    plt.title(i)
+    plt.imshow(avg_image[i], cmap='Greys', interpolation='None')
+    
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_visible(False)
+    frame.axes.get_yaxis().set_visible(False)
+plt.show()
+
+###### result 02 ######
+for i in range(10):
+    print(i," : ",avg[i])
