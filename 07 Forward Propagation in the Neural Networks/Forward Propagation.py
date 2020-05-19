@@ -27,3 +27,7 @@ size_col = 28
 file_name = "mnist_test.csv"
 
 images, labels = read_file(file_name, size_row, size_col)
+
+avg_image = []
+for num in range(10):
+    avg_image.append(np.average(images[:,labels==num], axis=1).reshape((size_row, size_col)))
