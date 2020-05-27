@@ -107,6 +107,15 @@ class classifier:
             print("LOS_T:", format(loss_train[-1],'.5f'), "\tACC_T:", format(accuracy_train[-1],'.5f'), "| LOS_V:", format(loss_test[-1],'.5f'), "ACC_V:" ,format(accuracy_test[-1],'.5f'))
 
         return loss_train, accuracy_train, loss_test, accuracy_test
+    
+    def predict(self, datas):
+        return self.forward_pass(datas, weights=self.best_weights)[-1]
+    def predict_class(self, datas, best=True):
+        if best:
+            weights = self.best_weights
+        else:
+            weights = self.weights
+        return np.argmax(self.forward_pass(datas, weights=weights)[-1], axis=1)
 
 size_row = 28
 size_col = 28
@@ -117,3 +126,50 @@ data_train = datas[:6000,:] ; data_test = datas[6000:,:]
 label_train = labels[:6000,:] ; label_test = labels[6000:,:]
 classifier = classifier([784, 196, 49, 10])
 loss_train, accuracy_train, loss_test, accuracy_test = classifier.optimize(data_train, label_train, data_test, label_test, 2000)
+
+#answers = classifier.predict_class(data_test, best=True) #use weights at minimum testing loss epoch
+answers = classifier.predict_class(data_test, best=False) #use latest weights
+expects = np.argmax(label_test, axis=1)
+corrects = data_test[answers==expects]
+corrects_label = expects[answers==expects]
+incorrects = data_test[answers!=expects]
+incorrects_label = expects[answers!=expects]
+incorrect_answer = answers[answers!=expects]
+
+
+###### Plot the Loss curve ######
+plt.title('Loss')
+plt.plot(loss_train, c='b')
+plt.plot(loss_test, c='r')
+plt.show()
+
+###### Plot the Accuracy curve ######
+plt.title('Accuracy')
+plt.plot(accuracy_train, c='b')
+plt.plot(accuracy_test, c='r')
+plt.show()
+
+###### Plot the Accuracy Value ######
+print('final training accuracy : ',accuracy_train[-1])
+print('final testing accuracy : ',accuracy_test[-1])
+print('training accuracy at minimum-test-loss epoch : ',classifier.best_train_accuracy)
+print('testing accuracy at minimum-test-loss epoch : ',classifier.best_test_accuracy)
+
+###### Plot the Classification Example ######
+for i in range(10):
+    plt.subplot(2,5,i+1)
+    plt.title(str(corrects_label[i]))
+    plt.imshow((corrects[i]).reshape((size_row,size_col)), cmap='Greys', interpolation='None')
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_visible(False)
+    frame.axes.get_yaxis().set_visible(False)
+plt.show()
+
+for i in range(10):
+    plt.subplot(2,5,i+1)
+    plt.title(str(incorrects_label[i]) + ',' + str(incorrect_answer[i]))
+    plt.imshow((incorrects[i]).reshape((size_row,size_col)), cmap='Greys', interpolation='None')
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_visible(False)
+    frame.axes.get_yaxis().set_visible(False)
+plt.show()
