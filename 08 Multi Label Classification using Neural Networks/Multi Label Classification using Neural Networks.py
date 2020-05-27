@@ -78,3 +78,4 @@ file_name = "mnist.csv"
 datas, labels = read_file(file_name, size_row, size_col, num_class)
 data_train = datas[:6000,:] ; data_test = datas[6000:,:]
 label_train = labels[:6000,:] ; label_test = labels[6000:,:]
+classifier = classifier([784, 196, 49, 10])
