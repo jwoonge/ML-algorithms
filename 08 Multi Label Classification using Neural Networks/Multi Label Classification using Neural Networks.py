@@ -57,6 +57,20 @@ class classifier:
         values.append(sigmoid(values[-1]))
         return values
 
+    def gradient_descent(self, forward_values, label):
+        update_values = []
+        m = len(label)
+        mult = (sigmoid_d(forward_values[-2]) * ((1-label)/(1-forward_values[-1]) - label/forward_values[-1])).T
+        layer = len(self.weights)-1
+        update_values.append(np.dot(mult, forward_values[2*layer]).T)
+        for i in range(1, len(self.weights)):
+            layer = len(self.weights) - i - 1
+            mult = (np.dot(mult.T, self.weights[layer+1][1:,:].T) * (sigmoid_d(forward_values[layer*2+1]))).T
+            update_values.append(np.dot(mult, forward_values[2*layer]).T)
+        for i in range(len(self.weights)):
+            layer = len(self.weights)-i-1
+            self.weights[layer] = self.weights[layer] - self.learning_rate/m * update_values[i]
+
 size_row = 28
 size_col = 28
 num_class = 10
