@@ -71,6 +71,43 @@ class classifier:
             layer = len(self.weights)-i-1
             self.weights[layer] = self.weights[layer] - self.learning_rate/m * update_values[i]
 
+    def optimize(self, data_train, label_train, data_test, label_test, epoch):
+        forward_train = self.forward_pass(data_train)
+        forward_test = self.forward_pass(data_test)
+        h_train = forward_train[-1]
+        h_test = forward_test[-1]
+        loss_train = [loss(h_train, label_train)]
+        loss_test = [loss(h_test, label_test)]
+        accuracy_train = [accuracy(h_train, label_train)]
+        accuracy_test = [accuracy(h_test, label_test)]
+        self.best_train_accuracy = accuracy_train[-1]
+        self.best_test_accuracy = accuracy_test[-1]
+        self.best_train_loss = loss_train[-1]
+        self.best_test_loss = loss_test[-1]
+        self.best_weights = self.weights
+        
+        for i in range(epoch-1):
+            self.gradient_descent(forward_train, label_train)
+            forward_train = self.forward_pass(data_train)
+            forward_test = self.forward_pass(data_test)
+            h_train = forward_train[-1]
+            h_test = forward_test[-1]
+            loss_train.append(loss(h_train, label_train))
+            loss_test.append(loss(h_test, label_test))
+            accuracy_train.append(accuracy(h_train, label_train))
+            accuracy_test.append(accuracy(h_test, label_test))
+            
+            if loss_test[-1] < self.best_test_loss:
+                self.best_test_loss = loss_test[-1]
+                self.best_train_loss = loss_train[-1]
+                self.best_test_accuracy = accuracy_test[-1]
+                self.best_train_accuracy = accuracy_train[-1]
+                self.best_weights = self.weights
+
+            print("LOS_T:", format(loss_train[-1],'.5f'), "\tACC_T:", format(accuracy_train[-1],'.5f'), "| LOS_V:", format(loss_test[-1],'.5f'), "ACC_V:" ,format(accuracy_test[-1],'.5f'))
+
+        return loss_train, accuracy_train, loss_test, accuracy_test
+
 size_row = 28
 size_col = 28
 num_class = 10
@@ -79,3 +116,4 @@ datas, labels = read_file(file_name, size_row, size_col, num_class)
 data_train = datas[:6000,:] ; data_test = datas[6000:,:]
 label_train = labels[:6000,:] ; label_test = labels[6000:,:]
 classifier = classifier([784, 196, 49, 10])
+loss_train, accuracy_train, loss_test, accuracy_test = classifier.optimize(data_train, label_train, data_test, label_test, 2000)
