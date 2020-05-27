@@ -23,6 +23,33 @@ def read_file(file_name, size_row, size_col, num_class):
 
     return list_image, one_hot_label
 
+def sigmoid(input):
+    return 1/(1+np.exp(-input))
+def sigmoid_d(input):
+    return sigmoid(input)*(1-sigmoid(input))
+
+
+class classifier:
+    def __init__(self, shape, learning_rate=1):
+        self.weights = []
+        for i in range(len(shape)-1):
+            self.weights.append(np.random.randn(shape[i]+1, shape[i+1]))
+        self.learning_rate = learning_rate
+        self.num_layer = len(self.weights)
+    
+    def forward_pass(self, input, weights=[]):
+        if weights==[]:
+            weights = self.weights
+        values = []
+        values.append(np.insert(input, 0, 1, axis=1))
+        values.append(np.dot(values[-1], weights[0]))
+        values.append(np.insert(sigmoid(values[-1]),0,1,axis=1))
+        for i in range(1, len(weights)-1):
+            values.append(np.dot(values[-1], weights[i]))
+            values.append(np.insert(sigmoid(values[-1]),0,1,axis=1))
+        values.append(np.dot(values[-1], weights[-1]))
+        values.append(sigmoid(values[-1]))
+        return values
 
 size_row = 28
 size_col = 28
