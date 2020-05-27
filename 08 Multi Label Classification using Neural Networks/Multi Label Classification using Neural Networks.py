@@ -27,6 +27,12 @@ def sigmoid(input):
     return 1/(1+np.exp(-input))
 def sigmoid_d(input):
     return sigmoid(input)*(1-sigmoid(input))
+def accuracy(h, label):
+    forward_passed = np.argmax(h, axis=1)
+    correct = forward_passed[forward_passed==np.argmax(label, axis=1)]
+    return len(correct)/len(forward_passed)*100
+def loss(h, label):
+    return np.sum(np.average(-label * np.log(h) - (1-label)*np.log(1-h), axis=0))
 
 
 class classifier:
