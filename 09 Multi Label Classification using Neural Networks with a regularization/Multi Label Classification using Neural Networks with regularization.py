@@ -31,8 +31,17 @@ def accuracy(h, label):
     forward_passed = np.argmax(h, axis=1)
     correct = forward_passed[forward_passed==np.argmax(label, axis=1)]
     return len(correct)/len(forward_passed)*100
-def loss(h, label):
-    return np.sum(np.average(-label * np.log(h) - (1-label)*np.log(1-h), axis=0))
+def loss(h, label, weights, lam):
+    pre = np.sum(np.average(-label * np.log(h) - (1-label)*np.log(1-h), axis=0))
+    n = 0
+    theta_sum = 0
+
+    for weight in weights:
+        n += np.shape(weight)[0]*np.shape(weight)[1]
+        theta_sum += np.sum(np.square(weight))
+    reg = lam/(2*n)*theta_sum
+
+    return pre + reg
 
 
 class classifier:
@@ -69,7 +78,8 @@ class classifier:
             update_values.append(np.dot(mult, forward_values[2*layer]).T)
         for i in range(len(self.weights)):
             layer = len(self.weights)-i-1
-            self.weights[layer] = self.weights[layer] - self.learning_rate/m * update_values[i]
+            self.weights[layer] = self.weights[layer] - self.learning_rate * (update_values[i]/m + self.lam*self.weights[layer]/self.n)
+
 
     def optimize(self, data_train, label_train, data_test, label_test, epoch):
         forward_train = self.forward_pass(data_train)
